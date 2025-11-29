@@ -2,47 +2,61 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
+        'nama',
         'email',
         'password',
+        'role',
+        'spesialisasi',
+        'nomor_pegawai',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+    // Auto-generate nomor pegawai berdasarkan role
+    protected static function boot()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        parent::boot();
+
+        static::creating(function ($user) {
+
+            // Tentukan prefix berdasarkan role
+            $prefix = match ($user->role) {
+                'admin' => 'PGW',
+                'dokter' => 'DKTR',
+                'perawat' => 'PRWT',
+                default => 'USR',
+            };
+
+            // Ambil user terakhir dengan prefix yang sama
+            $lastUser = User::where('nomor_pegawai', 'like', $prefix . '%')
+                ->orderBy('id', 'desc')
+                ->first();
+
+            // Tentukan nomor urut berikutnya
+            $nextNumber = 1;
+            if ($lastUser) {
+                $lastNumber = intval(substr($lastUser->nomor_pegawai, strlen($prefix) + 1));
+                $nextNumber = $lastNumber + 1;
+            }
+
+            // Generate nomor pegawai
+            $user->nomor_pegawai = $prefix . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        });
     }
 }
