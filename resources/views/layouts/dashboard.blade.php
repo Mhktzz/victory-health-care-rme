@@ -114,7 +114,7 @@
                         <i class="mr-3 fas fa-home"></i> Dashboard
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.dokter.queue')}}" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-list-ol"></i> Antrian Pasien
                     </a>
 
@@ -176,6 +176,18 @@
 
         </div>
     </div>
+
+    @if(session('success'))
+        <div id="toast-success" class="fixed right-6 bottom-6 bg-green-600 text-white px-4 py-3 rounded shadow-lg">
+            {{ session('success') }}
+        </div>
+        <script>
+            setTimeout(function(){
+                const t = document.getElementById('toast-success');
+                if(t){ t.style.transition = 'opacity 0.5s'; t.style.opacity = '0'; setTimeout(()=>t.remove(), 600); }
+            }, 2500);
+        </script>
+    @endif
 
 </body>
 
