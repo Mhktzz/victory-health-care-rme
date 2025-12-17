@@ -53,8 +53,9 @@
                         <i class="mr-3 fas fa-book-medical"></i> ICD-10
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-pills"></i> Data Obat
+                   <a href="{{ route('superadmin.obat.index') }}"
+                       class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                       <i class="mr-3 fas fa-pills"></i> Data Obat
                     </a>
 
                     <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
