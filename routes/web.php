@@ -98,6 +98,10 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         [MedicineController::class, 'destroy']
     )->name('superadmin.obat.destroy');
 
+     Route::get('/dashboard/superadmin/obat/stok',
+        [MedicineController::class, 'stok']
+    )->name('superadmin.obat.stok');
+
 
     Route::get(
         '/dashboard/superadmin/master-icd10',
