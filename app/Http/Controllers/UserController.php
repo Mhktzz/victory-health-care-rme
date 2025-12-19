@@ -62,7 +62,7 @@ class UserController extends Controller
     // UPDATE USER
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'username'     => 'required|string|max:255|unique:users,username,' . $user->id,
             'email'        => 'required|email|unique:users,email,' . $user->id,
@@ -70,19 +70,13 @@ class UserController extends Controller
             'spesialisasi' => 'nullable|string|max:255',
         ]);
 
-        $user->update($request->only(
-            'name',
-            'username',
-            'email',
-            'role',
-            'spesialisasi'
-        ));
+        $user->update($validated);
 
         return redirect()
             ->route('dashboard.superadmin.kelolauser')
             ->with('success', 'User berhasil diperbarui');
     }
-
+    
     // HAPUS USER
     public function destroy(User $user)
     {
