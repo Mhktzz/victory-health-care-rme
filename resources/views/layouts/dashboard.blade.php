@@ -113,8 +113,12 @@
                         <i class="mr-3 fas fa-home"></i> Dashboard
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-heartbeat"></i> Input Vital Sign
+                    <a href="{{ route('dashboard.perawat.antrianpemeriksaanawal') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <i class="mr-3 fas fa-heartbeat"></i> Input Vital Sign
+                    </a>
+
+                    <a href="{{ route('dashboard.perawat.periksa', ['id' => 21]) }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <i class="mr-3 fas fa-notes-medical w-5 text-center"></i> Pemeriksaan Awal
                     </a>
                 @endif
 

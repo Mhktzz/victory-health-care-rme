@@ -9,6 +9,7 @@ use App\Http\Controllers\reservationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\PerformadokterController;
+use App\Http\Controllers\PerawatController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -276,10 +277,35 @@ Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
 
 
 Route::middleware(['auth', 'role:perawat'])->group(function () {
-    Route::get('/dashboard/perawat', function () {
-        return view('dashboard.perawat.index');
+    Route::get('/dashboard/perawat/dashboardperawat', function () {
+        return view('dashboard.perawat.dashboardperawat');
     })->name('dashboard.perawat');
+
+    Route::get('/dashboard/perawat/antrianpemeriksaanawal', function () {
+        return view('dashboard.perawat.antrianpemeriksaanawal');
+    })->name('dashboard.perawat.antrianpemeriksaanawal');
+
+    // Dashboard Utama
+    Route::get('/dashboard/perawat/dashboardperawat', 
+    [PerawatController::class, 'index']
+    )->name('dashboard.perawat');
+
+    // Halaman Form Pemeriksaan Awal (Tujuan Klik Tombol Periksa)
+    Route::get('/dashboard/perawat/periksa/{id}', 
+    [PerawatController::class, 'create']
+    )->name('dashboard.perawat.periksa');
+
+    // Simpan Data Pemeriksaan
+    Route::post('/dashboard/perawat/store', 
+    [PerawatController::class, 'store']
+    )->name('dashboard.perawat.store');
+
+    // Tabel Antrian (Read)
+    Route::get('/dashboard/perawat/antrianpemeriksaanawal', 
+    [PerawatController::class, 'antrian']
+    )->name('dashboard.perawat.antrianpemeriksaanawal');
 });
+
 
 Route::middleware(['auth', 'role:dokter'])->group(function () {
     Route::get('/dashboard/dokter', function () {
