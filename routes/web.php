@@ -11,6 +11,9 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\PerformadokterController;
 use App\Http\Controllers\PerawatController;
 use App\Http\Controllers\DokterController;
+use App\http\Controllers\PendaftaranController;
+use App\Http\Controllers\ManajemenPasienController; 
+use App\Http\Controllers\StatusKunjunganController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -176,7 +179,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         [LayananController::class, 'destroy']
     )->name('dashboard.superadmin.layanan.destroy');
 
-    // ================= DATA PASIEN (SUPER ADMIN) =================
+   
     Route::get(
         '/dashboard/superadmin/data-pasien',
         [PatientController::class, 'indexSuperadmin']
@@ -269,14 +272,57 @@ Route::middleware(['auth', 'role:manajer'])->group(function () {
 
 
 Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
+    Route::get(
+        '/dashboard/pendaftaran/StatusKunjungan/index',
+        [ManajemenPasienController::class, 'index']
+    )->name('dashboard.pendaftaran.StatusKunjungan.index');
 
-    // INDEX
+
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/index',
+        [ManajemenPasienController::class, 'index']
+    )->name('dashboard.pendaftaran.ManajemenPasien.index');
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/create',
+        [ManajemenPasienController::class, 'create']
+    )->name('dashboard.pendaftaran.ManajemenPasien.create');
+
+    Route::post(
+        '/dashboard/pendaftaran/ManajemenPasien',
+        [ManajemenPasienController::class, 'store']
+    )->name('dashboard.pendaftaran.ManajemenPasien.store');
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/edit',
+        [ManajemenPasienController::class, 'edit']
+    )->name('dashboard.pendaftaran.ManajemenPasien.edit');
+
+    Route::put(
+        '/dashboard/pendaftaran/ManajemenPasien/{ManajemenPasien}',
+        [ManajemenPasienController::class, 'update']
+    )->name('dashboard.pendaftaran.ManajemenPasien.update');
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/show',
+        [ManajemenPasienController::class, 'showManajemenPasien']
+    )->name('dashboard.pendaftaran.ManajemenPasien.show');
+
+    Route::delete(
+        '/dashboard/pendaftaran/ManajemenPasien/{ManajemenPasien}',
+        [ManajemenPasienController::class, 'destroy']
+    )->name('dashboard.pendaftaran.ManajemenPasien.destroy');
+    Route::get('dashboard/pendaftaran/ManajemenPasien', [ManajemenPasienController::class, 'index'])
+        ->name('dashboard.pendaftaran.ManajemenPasien');
+
+    
     Route::get(
         '/dashboard/pendaftaran/reservasi/index',
         [ReservationController::class, 'index']
     )->name('dashboard.pendaftaran.reservasi.index');
 
-    // CREATE
+    
     Route::get(
         '/dashboard/pendaftaran/reservasi/create',
         [ReservationController::class, 'create']
@@ -288,25 +334,25 @@ Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
         [ReservationController::class, 'store']
     )->name('dashboard.pendaftaran.reservasi.store');
 
-    // SHOW (VIEW)
+    
     Route::get(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'show']
     )->name('dashboard.pendaftaran.reservasi.view');
 
-    // EDIT
+    
     Route::get(
         '/dashboard/pendaftaran/reservasi/{reservasi}/edit',
         [ReservationController::class, 'edit']
     )->name('dashboard.pendaftaran.reservasi.edit');
 
-    // UPDATE
+    
     Route::put(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'update']
     )->name('dashboard.pendaftaran.reservasi.update');
 
-    // DELETE
+    
     Route::delete(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'destroy']

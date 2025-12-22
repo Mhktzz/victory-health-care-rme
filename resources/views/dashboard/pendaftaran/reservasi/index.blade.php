@@ -75,10 +75,10 @@
                 {{-- AKSI --}}
                 <div class="flex gap-3 mt-4 lg:mt-0">
 
-                    {{-- MULAI / VIEW --}}
+                    {{-- View --}}
                     <a href="{{ route('dashboard.pendaftaran.reservasi.view', $r->id) }}"
                        class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
-                        Mulai Pemeriksaan
+                        View
                     </a>
 
                     {{-- EDIT --}}

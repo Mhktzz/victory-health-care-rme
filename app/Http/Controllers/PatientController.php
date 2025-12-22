@@ -141,7 +141,9 @@ class PatientController extends Controller
             'telepon'        => $request->telepon,
         ]);
 
-        return redirect()->back()->with('success', 'Data pasien berhasil diperbarui');
+        return redirect()
+        ->route('dashboard.superadmin.datapasien.index')
+        ->with('success', 'Data pasien berhasil diperbarui');
     }
 
     
