@@ -25,7 +25,7 @@ class AuthController extends Controller
             return match (Auth::user()->role) {
                 'super_admin' => redirect()->route('dashboard.superadmin'),
                 'manajer' => redirect()->route('dashboard.manajer'),
-                'pendaftaran' => redirect()->route('dashboard.pendaftaran'),
+                'pendaftaran' => redirect()->route('dashboard.pendaftaran.reservasi.index'),
                 'perawat' => redirect()->route('dashboard.perawat'),
                 'dokter' => redirect()->route('dashboard.dokter'),
                 'apoteker' => redirect()->route('dashboard.apoteker'),

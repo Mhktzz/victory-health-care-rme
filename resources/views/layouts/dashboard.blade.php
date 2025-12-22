@@ -6,6 +6,8 @@
     <title>@yield('title', 'Dashboard')</title>
 
     @vite('resources/css/app.css')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -34,7 +36,7 @@
                         <i class="mr-3 fas fa-users-cog"></i> Kelola User
                     </a>
 
-                    <a href="{{ route('dashboard.superadmin.datapasien') }}"
+                    <a href="{{ route('dashboard.superadmin.datapasien.index') }}"
                         class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-user-injured"></i> Data Pasien
                     </a>
@@ -48,15 +50,18 @@
                         Master Data Medis
                     </p>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.superadmin.icd10.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-book-medical"></i> ICD-10
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('superadmin.obat.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-pills"></i> Data Obat
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.superadmin.layanan.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-stethoscope"></i> Data Layanan
                     </a>
 
@@ -72,28 +77,32 @@
                         <i class="mr-3 fas fa-home"></i> Dashboard
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.manajer.datapasien.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-user-injured"></i> Data Pasien
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.manajer.layanan.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-stethoscope"></i> Layanan
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.manajer.performadokter.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-chart-line"></i> Performa Dokter
                     </a>
                 @endif
 
                 {{-- ================= PENDAFTARAN ================= --}}
                 @if (auth()->user()->role === 'pendaftaran')
-                    <a href="{{ route('dashboard.pendaftaran') }}"
+                    <a href="{{ route('dashboard.pendaftaran.patient') }}"
                         class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-home"></i> Dashboard
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-user-plus"></i> Manajemen Pasien
+                    <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                        <i class="mr-3 fas fa-user-plus"></i> Reservasi
                     </a>
                 @endif
 
@@ -104,8 +113,12 @@
                         <i class="mr-3 fas fa-home"></i> Dashboard
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-heartbeat"></i> Input Vital Sign
+                    <a href="{{ route('dashboard.perawat.antrianpemeriksaanawal') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <i class="mr-3 fas fa-heartbeat"></i> Input Vital Sign
+                    </a>
+
+                    <a href="{{ route('dashboard.perawat.periksa', ['id' => 21]) }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <i class="mr-3 fas fa-notes-medical w-5 text-center"></i> Pemeriksaan Awal
                     </a>
                 @endif
 
@@ -146,14 +159,6 @@
                 @endif
 
             </nav>
-
-
-            <form method="POST" action="{{ route('logout') }}" class="p-4">
-                @csrf
-                <button class="w-full px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700">
-                    Logout
-                </button>
-            </form>
         </aside>
 
         {{-- MAIN CONTENT --}}
@@ -163,11 +168,36 @@
             <header class="flex items-center justify-between h-16 px-6 bg-white shadow">
                 <h1 class="text-lg font-semibold">@yield('page-title')</h1>
 
-                <div class="flex items-center gap-3">
-                    <span class="text-sm font-medium">
-                        {{ auth()->user()->name }}
-                    </span>
-                    <i class="text-2xl text-gray-600 fas fa-user-circle"></i>
+                {{-- PROFILE DROPDOWN --}}
+                <div class="relative">
+                    <button id="profileButton" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100">
+                        <span class="text-sm font-medium">
+                            {{ auth()->user()->name }}
+                        </span>
+                        <i class="text-2xl text-gray-600 fas fa-user-circle"></i>
+                        <i class="text-xs text-gray-500 fas fa-chevron-down"></i>
+                    </button>
+
+                    <div id="profileDropdown"
+                        class="absolute right-0 z-50 hidden w-48 mt-2 bg-white border rounded-lg shadow-lg">
+                        <a href="#" class="flex items-center px-4 py-2 text-sm hover:bg-gray-100">
+                            <i class="mr-2 fas fa-user"></i> Profil Saya
+                        </a>
+
+                        <a href="#" class="flex items-center px-4 py-2 text-sm hover:bg-gray-100">
+                            <i class="mr-2 fas fa-circle-question"></i> Bantuan
+                        </a>
+
+                        <div class="border-t"></div>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="mr-2 fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </header>
 
@@ -179,17 +209,20 @@
         </div>
     </div>
 
-    @if(session('success'))
-        <div id="toast-success" class="fixed right-6 bottom-6 bg-green-600 text-white px-4 py-3 rounded shadow-lg">
-            {{ session('success') }}
-        </div>
-        <script>
-            setTimeout(function(){
-                const t = document.getElementById('toast-success');
-                if(t){ t.style.transition = 'opacity 0.5s'; t.style.opacity = '0'; setTimeout(()=>t.remove(), 600); }
-            }, 2500);
-        </script>
-    @endif
+    {{-- DROPDOWN SCRIPT --}}
+    <script>
+        document.addEventListener('click', function() {
+            document.getElementById('profileDropdown')?.classList.add('hidden');
+        });
+
+        document.getElementById('profileButton')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('profileDropdown').classList.toggle('hidden');
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @stack('scripts')
 
 </body>
 

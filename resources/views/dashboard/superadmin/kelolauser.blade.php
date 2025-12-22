@@ -127,16 +127,18 @@
                             </a>
 
                             {{-- Hapus (Delete) --}}
-                            <form action="{{ route('dashboard.superadmin.user.destroy', $user) }}"
-                                  method="POST"
-                                  class="inline"
-                                  onsubmit="return confirm('Yakin ingin menghapus user {{ $user->name }}?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900 p-2" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            <form action="{{ route('dashboard.superadmin.user.destroy', $user) }}" 
+      method="POST" 
+      class="inline"
+      onsubmit="return confirm('Yakin ingin menghapus user {{ $user->name }}?')">
+    @csrf
+    @method('DELETE')
+
+    <button type="submit" class="text-red-600 hover:text-red-900">
+        <i class="fas fa-trash"></i>
+    </button>
+</form>
+
                         </td>
                     </tr>
                     @empty
