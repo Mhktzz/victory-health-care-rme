@@ -67,9 +67,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         return view('dashboard.superadmin.rekammedis');
     })->name('dashboard.superadmin.rekammedis');
 
-    Route::get('/dashboard/superadmin/data-pasien', function () {
-        return view('dashboard.superadmin.datapasien');
-    })->name('dashboard.superadmin.datapasien');
+    
 
 
     Route::get(
@@ -178,7 +176,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     )->name('dashboard.superadmin.layanan.destroy');
 
     // ================= DATA PASIEN (SUPER ADMIN) =================
-Route::get(
+    Route::get(
         '/dashboard/superadmin/data-pasien',
         [PatientController::class, 'indexSuperadmin']
     )->name('dashboard.superadmin.datapasien.index');
