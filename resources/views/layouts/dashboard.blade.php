@@ -140,23 +140,27 @@
 
                 {{-- ================= APOTEKER ================= --}}
                 @if (auth()->user()->role === 'apoteker')
-                    <a href="{{ route('dashboard.apoteker') }}"
-                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-home"></i> Dashboard
-                    </a>
+    <a href="{{ route('dashboard.apoteker') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-home"></i> Dashboard
+    </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-prescription"></i> Daftar Resep
-                    </a>
+    <a href="{{ route('dashboard.apoteker.resep') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-prescription"></i> Daftar Resep
+    </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-pills"></i> Stok Obat
-                    </a>
+    <a href="{{ route('dashboard.apoteker.stok.obat') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-pills"></i> Stok Obat
+    </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-clock-rotate-left"></i> Riwayat Obat
-                    </a>
-                @endif
+    <a href="{{ route('dashboard.apoteker.riwayat') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-clock-rotate-left"></i> Riwayat Obat
+    </a>
+@endif
+
 
             </nav>
         </aside>
