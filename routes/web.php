@@ -10,6 +10,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\PerformadokterController;
 use App\Http\Controllers\PerawatController;
+use App\Http\Controllers\DokterController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -223,6 +224,11 @@ Route::middleware(['auth', 'role:manajer'])->group(function () {
     })->name('dashboard.manajer');
 
     Route::get('/dashboard/manajer/datapasien', [PatientController::class, 'indexManajer'])->name('dashboard.manajer.datapasien.index');
+
+    Route::get(
+        '/dashboard/manajer/datapasien/{patient}',
+        [PatientController::class, 'showManajer']
+    )->name('dashboard.manajer.datapasien.show');
 
     Route::get(
         '/dashboard/manajer/layanan',

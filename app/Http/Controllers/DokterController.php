@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\MedicalRecord;
 use App\Models\User;
 use App\Models\MedicineStock;
+use App\Models\Icd10;
 use Illuminate\Support\Facades\Auth;
 
 class DokterController extends Controller
@@ -41,7 +42,8 @@ class DokterController extends Controller
     public function record($id)
     {
         $record = MedicalRecord::with(['patient', 'vitalSign'])->findOrFail($id);
-        return view('dashboard.dokter.record', compact('record'));
+        $icd10s = Icd10::all();
+        return view('dashboard.dokter.record', compact('record', 'icd10s'));
     }
 
     // Simpan rekam medis

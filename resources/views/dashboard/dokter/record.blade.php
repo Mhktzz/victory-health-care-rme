@@ -68,9 +68,15 @@
 			<!-- C. Diagnosis (Kode ICD-10) -->
 			<div class="mb-6">
 				<h4 class="font-semibold">C. Diagnosis (Kode ICD-10) <span class="text-red-500">*</span></h4>
-				<div class="flex items-center gap-3 mt-2">
-					<input type="text" name="diagnosa" value="{{ old('diagnosa', $record->diagnosa) }}" placeholder="Contoh: Demam ringan" class="block w-full border rounded px-3 py-2 text-sm" />
-					<button type="button" class="bg-amber-500 text-white px-4 py-2 rounded" onclick="alert('Buka picker ICD-10')"><i class="fas fa-search mr-2"></i>Pilih Kode ICD-10</button>
+				<div class="mt-2">
+                    <label class="block text-sm text-gray-600 mb-1">Cari & Pilih Kode ICD-10</label>
+					<input list="icd10-options" name="diagnosa" value="{{ old('diagnosa', $record->diagnosa) }}" placeholder="Ketik kode atau nama penyakit..." class="block w-full border rounded px-3 py-2 text-sm" autocomplete="off" />
+                    <datalist id="icd10-options">
+                        @foreach($icd10s as $icd)
+                            <option value="{{ $icd->kode }} - {{ $icd->nama_penyakit }}">
+                        @endforeach
+                    </datalist>
+                    <p class="text-xs text-gray-400 mt-1">Pilih dari daftar yang muncul saat mengetik.</p>
 				</div>
 			</div>
 
