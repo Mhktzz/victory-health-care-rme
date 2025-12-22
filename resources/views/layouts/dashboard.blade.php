@@ -129,7 +129,7 @@
                         <i class="mr-3 fas fa-home"></i> Dashboard
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                    <a href="{{ route('dashboard.dokter.queue')}}" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
                         <i class="mr-3 fas fa-list-ol"></i> Antrian Pasien
                     </a>
 

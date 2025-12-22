@@ -10,6 +10,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\PerformadokterController;
 use App\Http\Controllers\PerawatController;
+use App\Http\Controllers\DokterController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -223,6 +224,11 @@ Route::middleware(['auth', 'role:manajer'])->group(function () {
     Route::get('/dashboard/manajer/datapasien', [PatientController::class, 'indexManajer'])->name('dashboard.manajer.datapasien.index');
 
     Route::get(
+        '/dashboard/manajer/datapasien/{patient}',
+        [PatientController::class, 'showManajer']
+    )->name('dashboard.manajer.datapasien.show');
+
+    Route::get(
         '/dashboard/manajer/layanan',
         [LayananController::class, 'indexManajer']
     )->name('dashboard.manajer.layanan.index');
@@ -343,9 +349,15 @@ Route::middleware(['auth', 'role:perawat'])->group(function () {
 
 
 Route::middleware(['auth', 'role:dokter'])->group(function () {
-    Route::get('/dashboard/dokter', function () {
-        return view('dashboard.dokter.index');
-    })->name('dashboard.dokter');
+    Route::get('/dashboard/dokter', [App\Http\Controllers\DokterController::class, 'index'])->name('dashboard.dokter');
+
+    // Antrian dokter
+    Route::get('/dashboard/dokter/antrian', [DokterController::class, 'queue'])->name('dashboard.dokter.queue');
+    Route::post('/dashboard/dokter/antrian/{patient}/panggil', [DokterController::class, 'callPatient'])->name('dashboard.dokter.call');
+
+    // Rekam medis
+    Route::get('/dashboard/dokter/rekam-medis/{id}', [DokterController::class, 'record'])->name('dashboard.dokter.record');
+    Route::post('/dashboard/dokter/rekam-medis/{id}', [DokterController::class, 'storeRecord'])->name('dashboard.dokter.record.store');
 });
 
 Route::middleware(['auth', 'role:apoteker'])->group(function () {

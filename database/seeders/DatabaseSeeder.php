@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Patient;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -67,6 +68,27 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('apoteker123'),
             'role' => 'apoteker',
             'spesialisasi' => null,
+        ]);
+
+        // SAMPLE PATIENT for dokter queue
+        Patient::create([
+            'nik' => '3210012345678901',
+            'no_rm' => 'RM0001',
+            'nama' => 'Joko Widodo',
+            'tanggal_lahir' => '1977-06-21',
+            'jenis_kelamin' => 'L',
+            'telepon' => '081234567890',
+            'status_pasien' => 'lama',
+        ]);
+
+        Patient::create([
+            'nik' => '3210012345678998',
+            'no_rm' => 'RM0002',
+            'nama' => 'Arid Budiman',
+            'tanggal_lahir' => '2005-06-21',
+            'jenis_kelamin' => 'L',
+            'telepon' => '081234567891011',
+            'status_pasien' => 'lama',
         ]);
     }
 }

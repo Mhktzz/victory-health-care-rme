@@ -22,6 +22,24 @@ class PatientController extends Controller
     }
 
    
+    /* =========================
+     |  MANAJER
+     ========================= */
+
+    public function indexManajer()
+    {
+        $patients = Patient::latest()->get();
+        return view('dashboard.manajer.datapasien.index', compact('patients'));
+    }
+
+    public function showManajer(Patient $patient)
+    {
+        return view('dashboard.manajer.datapasien.show', compact('patient'));
+    }
+
+    /* =========================
+     |  PENDAFTARAN
+     ========================= */
 
     public function indexPendaftaran()
     {
