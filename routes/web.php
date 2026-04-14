@@ -14,7 +14,7 @@ use App\Http\Controllers\ObatController;
 use App\Http\Controllers\RiwayatObatController;
 use App\Http\Controllers\DokterController;
 use App\http\Controllers\PendaftaranController;
-use App\Http\Controllers\ManajemenPasienController; 
+use App\Http\Controllers\ManajemenPasienController;
 use App\Http\Controllers\StatusKunjunganController;
 
 Route::get('/', function () {
@@ -91,7 +91,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     )->name('superadmin.obat.stok');
 
 
-   Route::get(
+    Route::get(
         '/dashboard/superadmin/master-icd10',
         [Icd10Controller::class, 'index']
     )->name('dashboard.superadmin.icd10.index');
@@ -161,7 +161,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         [LayananController::class, 'destroy']
     )->name('dashboard.superadmin.layanan.destroy');
 
-   
+
     Route::get(
         '/dashboard/superadmin/data-pasien',
         [PatientController::class, 'indexSuperadmin']
@@ -196,7 +196,6 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         '/dashboard/superadmin/data-pasien/{patient}',
         [PatientController::class, 'destroy']
     )->name('dashboard.superadmin.datapasien.destroy');
-
 });
 
 // MANAGERR
@@ -260,7 +259,7 @@ Route::middleware(['auth', 'role:manajer'])->group(function () {
 */
 Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
     Route::get(
-        '/dashboard/pendaftaran/StatusKunjungan/index', 
+        '/dashboard/pendaftaran/StatusKunjungan/index',
         [ManajemenPasienController::class, 'index']
     )->name('dashboard.pendaftaran.StatusKunjungan.index');
 
@@ -303,13 +302,13 @@ Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
     Route::get('dashboard/pendaftaran/ManajemenPasien', [ManajemenPasienController::class, 'index'])
         ->name('dashboard.pendaftaran.ManajemenPasien');
 
-    
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/index',
         [ReservationController::class, 'index']
     )->name('dashboard.pendaftaran.reservasi.index');
 
-    
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/create',
         [ReservationController::class, 'create']
@@ -321,25 +320,25 @@ Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
         [ReservationController::class, 'store']
     )->name('dashboard.pendaftaran.reservasi.store');
 
-    
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'show']
     )->name('dashboard.pendaftaran.reservasi.view');
 
-    
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/{reservasi}/edit',
         [ReservationController::class, 'edit']
     )->name('dashboard.pendaftaran.reservasi.edit');
 
-    
+
     Route::put(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'update']
     )->name('dashboard.pendaftaran.reservasi.update');
 
-    
+
     Route::delete(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'destroy']
@@ -419,13 +418,12 @@ Route::middleware(['auth', 'role:apoteker'])->group(function () {
         return view('dashboard.apoteker.riwayat');
     })->name('dashboard.apoteker.riwayat');
 
-    
+
 
     Route::middleware(['auth', 'role:apoteker'])->group(function () {
-    Route::get(
-        '/dashboard/apoteker/riwayat',
-        [RiwayatObatController::class, 'index']
-    )->name('dashboard.apoteker.riwayat');
-});
-
+        Route::get(
+            '/dashboard/apoteker/riwayat',
+            [RiwayatObatController::class, 'index']
+        )->name('dashboard.apoteker.riwayat');
+    });
 });

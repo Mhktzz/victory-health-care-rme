@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PatientController extends Controller
 {
-    
+
 
     public function indexSuperadmin()
     {
@@ -21,7 +21,7 @@ class PatientController extends Controller
         return view('dashboard.superadmin.datapasien.show', compact('patient'));
     }
 
-   
+
     /* =========================
      |  MANAJER
      ========================= */
@@ -52,7 +52,7 @@ class PatientController extends Controller
         return view('dashboard.pendaftaran.patient.show', compact('patient'));
     }
 
-   
+
 
     public function create()
     {
@@ -69,7 +69,7 @@ class PatientController extends Controller
         abort(403);
     }
 
-    
+
 
     public function store(Request $request)
     {
@@ -106,7 +106,7 @@ class PatientController extends Controller
         abort(403);
     }
 
-    
+
 
     public function edit(Patient $patient)
     {
@@ -121,7 +121,7 @@ class PatientController extends Controller
         abort(403);
     }
 
-    
+
 
     public function update(Request $request, Patient $patient)
     {
@@ -142,11 +142,11 @@ class PatientController extends Controller
         ]);
 
         return redirect()
-        ->route('dashboard.superadmin.datapasien.index')
-        ->with('success', 'Data pasien berhasil diperbarui');
+            ->route('dashboard.superadmin.datapasien.index')
+            ->with('success', 'Data pasien berhasil diperbarui');
     }
 
-    
+
 
     public function destroy(Patient $patient)
     {

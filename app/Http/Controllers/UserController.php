@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -28,9 +29,24 @@ class UserController extends Controller
             'name'         => 'required|string|max:255',
             'username'     => 'required|string|max:255|unique:users,username',
             'email'        => 'required|email|unique:users,email',
-            'password'     => 'required|min:6',
+            'password'     => [
+                'required',
+                Password::min(8)
+                    ->max(30)
+                    ->mixedCase()
+                    ->numbers(),
+            ],
             'role'         => 'required',
             'spesialisasi' => 'nullable|string|max:255',
+        ], [
+            'name.required'     => 'Nama wajib diisi',
+            'username.required' => 'Username wajib diisi',
+            'username.unique'   => 'Username sudah digunakan',
+            'email.required'    => 'Email wajib diisi',
+            'email.email'       => 'Format email tidak valid',
+            'email.unique'      => 'Email sudah digunakan',
+            'password.required' => 'Password wajib diisi',
+            'role.required'     => 'Role wajib dipilih',
         ]);
 
         User::create([
@@ -50,19 +66,19 @@ class UserController extends Controller
     // DETAIL USER
     public function show(User $user)
     {
-    return view('dashboard.superadmin.kelolauser.read', compact('user'));
+        return view('dashboard.superadmin.kelolauser.read', compact('user'));
     }
 
     // FORM EDIT USER
     public function edit(User $user)
     {
-    return view('dashboard.superadmin.kelolauser.edit', compact('user'));
+        return view('dashboard.superadmin.kelolauser.edit', compact('user'));
     }
 
     // UPDATE USER
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name'         => 'required|string|max:255',
             'username'     => 'required|string|max:255|unique:users,username,' . $user->id,
             'email'        => 'required|email|unique:users,email,' . $user->id,
@@ -70,13 +86,13 @@ class UserController extends Controller
             'spesialisasi' => 'nullable|string|max:255',
         ]);
 
-        $user->update($validated);
+        $user->update($request->except('password'));
 
         return redirect()
             ->route('dashboard.superadmin.kelolauser')
             ->with('success', 'User berhasil diperbarui');
     }
-    
+
     // HAPUS USER
     public function destroy(User $user)
     {
