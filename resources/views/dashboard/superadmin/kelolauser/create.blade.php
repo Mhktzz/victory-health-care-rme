@@ -27,6 +27,7 @@
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 
                 {{-- NAMA --}}
+                {{-- NAMA --}}
                 <div>
                     <label class="block mb-1 text-sm font-medium">Nama</label>
                     <input type="text" name="name" value="{{ old('name') }}" class="w-full p-2 border rounded-md">
@@ -35,6 +36,7 @@
                     @enderror
                 </div>
 
+                {{-- USERNAME --}}
                 {{-- USERNAME --}}
                 <div>
                     <label class="block mb-1 text-sm font-medium">Username</label>
@@ -46,6 +48,7 @@
                 </div>
 
                 {{-- EMAIL --}}
+                {{-- EMAIL --}}
                 <div>
                     <label class="block mb-1 text-sm font-medium">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}" class="w-full p-2 border rounded-md">
@@ -54,6 +57,7 @@
                     @enderror
                 </div>
 
+                {{-- PASSWORD --}}
                 {{-- PASSWORD --}}
                 <div>
                     <label class="block mb-1 text-sm font-medium">Password</label>
@@ -66,8 +70,17 @@
                     @error('password')
                         <p class="text-sm text-red-500">{{ $message }}</p>
                     @enderror
+
+                    <small class="text-gray-500">
+                        Minimal 8 karakter, harus ada huruf besar & angka
+                    </small>
+
+                    @error('password')
+                        <p class="text-sm text-red-500">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                {{-- ROLE --}}
                 {{-- ROLE --}}
                 <div>
                     <label class="block mb-1 text-sm font-medium">Role</label>
@@ -99,6 +112,7 @@
                     @enderror
                 </div>
 
+                {{-- SPESIALISASI --}}
                 {{-- SPESIALISASI --}}
                 <div>
                     <label class="block mb-1 text-sm font-medium">
