@@ -5,12 +5,18 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\Icd10Controller;
-use App\Http\Controllers\reservationController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\PerformadokterController;
 use App\Http\Controllers\PerawatController;
+use App\Http\Controllers\ObatController;
+use App\Http\Controllers\RiwayatObatController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\InvoiceController;
+use App\http\Controllers\PendaftaranController;
+use App\Http\Controllers\ManajemenPasienController;
+use App\Http\Controllers\StatusKunjunganController;
 
 Route::get('/', function () {
     return view('landingpage');
@@ -20,57 +26,34 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
+/*
+|--------------------------------------------------------------------------
+| SUPER ADMIN
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:super_admin'])->group(function () {
 
     Route::get('/dashboard/superadmin', function () {
         return view('dashboard.superadmin.dashboard');
     })->name('dashboard.superadmin');
 
-
-    Route::get(
-        '/dashboard/superadmin/kelola-user',
-        [UserController::class, 'kelolauser']
-    )->name('dashboard.superadmin.kelolauser');
-
-    Route::get(
-        '/dashboard/superadmin/user/create',
-        [UserController::class, 'create']
-    )->name('dashboard.superadmin.user.create');
-
-    Route::post(
-        '/dashboard/superadmin/user',
-        [UserController::class, 'store']
-    )->name('dashboard.superadmin.user.store');
-
-    Route::get(
-        '/dashboard/superadmin/user/{user}',
-        [UserController::class, 'show']
-    )->name('dashboard.superadmin.user.show');
-
-    Route::get(
-        '/dashboard/superadmin/user/{user}/edit',
-        [UserController::class, 'edit']
-    )->name('dashboard.superadmin.user.edit');
-
-    Route::put(
-        '/dashboard/superadmin/user/{user}',
-        [UserController::class, 'update']
-    )->name('dashboard.superadmin.user.update');
-
-    Route::delete(
-        '/dashboard/superadmin/user/{user}',
-        [UserController::class, 'destroy']
-    )->name('dashboard.superadmin.user.destroy');
-
-
     Route::get('/dashboard/superadmin/rekam-medis', function () {
         return view('dashboard.superadmin.rekammedis');
     })->name('dashboard.superadmin.rekammedis');
 
-    Route::get('/dashboard/superadmin/data-pasien', function () {
-        return view('dashboard.superadmin.datapasien');
-    })->name('dashboard.superadmin.datapasien');
+    Route::get('/dashboard/superadmin/kelola-user', [UserController::class, 'kelolauser'])
+        ->name('dashboard.superadmin.kelolauser');
+
+    Route::resource('/dashboard/superadmin/user', UserController::class)
+        ->names([
+            'index' => 'dashboard.superadmin.user.index',
+            'create' => 'dashboard.superadmin.user.create',
+            'store' => 'dashboard.superadmin.user.store',
+            'show' => 'dashboard.superadmin.user.show',
+            'edit' => 'dashboard.superadmin.user.edit',
+            'update' => 'dashboard.superadmin.user.update',
+            'destroy' => 'dashboard.superadmin.user.destroy',
+        ]);
 
 
     Route::get(
@@ -143,6 +126,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         '/dashboard/superadmin/master-icd10/{icd10}',
         [Icd10Controller::class, 'destroy']
     )->name('dashboard.superadmin.icd10.destroy');
+
     Route::get(
         '/dashboard/superadmin/layanan',
         [LayananController::class, 'indexSuperadmin']
@@ -178,8 +162,8 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
         [LayananController::class, 'destroy']
     )->name('dashboard.superadmin.layanan.destroy');
 
-    // ================= DATA PASIEN (SUPER ADMIN) =================
-Route::get(
+
+    Route::get(
         '/dashboard/superadmin/data-pasien',
         [PatientController::class, 'indexSuperadmin']
     )->name('dashboard.superadmin.datapasien.index');
@@ -213,9 +197,9 @@ Route::get(
         '/dashboard/superadmin/data-pasien/{patient}',
         [PatientController::class, 'destroy']
     )->name('dashboard.superadmin.datapasien.destroy');
-
 });
 
+// MANAGERR
 
 Route::middleware(['auth', 'role:manajer'])->group(function () {
 
@@ -265,20 +249,67 @@ Route::middleware(['auth', 'role:manajer'])->group(function () {
         '/dashboard/manajer/layanan/{layanan}',
         [LayananController::class, 'destroy']
     )->name('dashboard.manajer.layanan.destroy');
-    Route::get('/dashboard/manajer/performadokter', [PerformadokterController::class, 'index'])->name('dashboard.manajer.performadokter.index');
+    Route::get('/dashboard/manajer/performadokter', [PerformadokterController::class, 'index'])
+        ->name('dashboard.manajer.performadokter.index');
 });
 
-
-
+/*
+|--------------------------------------------------------------------------
+| PENDAFTARAN
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
+    Route::get(
+        '/dashboard/pendaftaran/StatusKunjungan/index',
+        [ManajemenPasienController::class, 'index']
+    )->name('dashboard.pendaftaran.StatusKunjungan.index');
 
-    // INDEX
+
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/index',
+        [ManajemenPasienController::class, 'index']
+    )->name('dashboard.pendaftaran.ManajemenPasien.index');
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/create',
+        [ManajemenPasienController::class, 'create']
+    )->name('dashboard.pendaftaran.ManajemenPasien.create');
+
+    Route::post(
+        '/dashboard/pendaftaran/ManajemenPasien',
+        [ManajemenPasienController::class, 'store']
+    )->name('dashboard.pendaftaran.ManajemenPasien.store');
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/edit/{patient}',
+        [ManajemenPasienController::class, 'edit']
+    )->name('dashboard.pendaftaran.ManajemenPasien.edit');
+
+    Route::put(
+        '/dashboard/pendaftaran/ManajemenPasien/{patient}',
+        [ManajemenPasienController::class, 'update']
+    )->name('dashboard.pendaftaran.ManajemenPasien.update');
+
+    Route::get(
+        '/dashboard/pendaftaran/ManajemenPasien/show/{patient}',
+        [ManajemenPasienController::class, 'showManajemenPasien']
+    )->name('dashboard.pendaftaran.ManajemenPasien.show');
+
+    Route::delete(
+        '/dashboard/pendaftaran/ManajemenPasien/{patient}',
+        [ManajemenPasienController::class, 'destroy']
+    )->name('dashboard.pendaftaran.ManajemenPasien.destroy');
+    Route::get('dashboard/pendaftaran/ManajemenPasien', [ManajemenPasienController::class, 'index'])
+        ->name('dashboard.pendaftaran.ManajemenPasien');
+
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/index',
         [ReservationController::class, 'index']
     )->name('dashboard.pendaftaran.reservasi.index');
 
-    // CREATE
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/create',
         [ReservationController::class, 'create']
@@ -290,25 +321,25 @@ Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
         [ReservationController::class, 'store']
     )->name('dashboard.pendaftaran.reservasi.store');
 
-    // SHOW (VIEW)
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'show']
     )->name('dashboard.pendaftaran.reservasi.view');
 
-    // EDIT
+
     Route::get(
         '/dashboard/pendaftaran/reservasi/{reservasi}/edit',
         [ReservationController::class, 'edit']
     )->name('dashboard.pendaftaran.reservasi.edit');
 
-    // UPDATE
+
     Route::put(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'update']
     )->name('dashboard.pendaftaran.reservasi.update');
 
-    // DELETE
+
     Route::delete(
         '/dashboard/pendaftaran/reservasi/{reservasi}',
         [ReservationController::class, 'destroy']
@@ -318,38 +349,31 @@ Route::middleware(['auth', 'role:pendaftaran'])->group(function () {
         ->name('dashboard.pendaftaran.patient');
 });
 
-
+/*
+|--------------------------------------------------------------------------
+| PERAWAT
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:perawat'])->group(function () {
-    Route::get('/dashboard/perawat/dashboardperawat', function () {
-        return view('dashboard.perawat.dashboardperawat');
-    })->name('dashboard.perawat');
 
-    Route::get('/dashboard/perawat/antrianpemeriksaanawal', function () {
-        return view('dashboard.perawat.antrianpemeriksaanawal');
-    })->name('dashboard.perawat.antrianpemeriksaanawal');
+    Route::get('/dashboard/perawat', [PerawatController::class, 'index'])
+        ->name('dashboard.perawat');
 
-    // Dashboard Utama
-    Route::get('/dashboard/perawat/dashboardperawat', 
-    [PerawatController::class, 'index']
-    )->name('dashboard.perawat');
+    Route::get('/dashboard/perawat/periksa/{id}', [PerawatController::class, 'create'])
+        ->name('dashboard.perawat.periksa');
 
-    // Halaman Form Pemeriksaan Awal (Tujuan Klik Tombol Periksa)
-    Route::get('/dashboard/perawat/periksa/{id}', 
-    [PerawatController::class, 'create']
-    )->name('dashboard.perawat.periksa');
+    Route::post('/dashboard/perawat/store', [PerawatController::class, 'store'])
+        ->name('dashboard.perawat.store');
 
-    // Simpan Data Pemeriksaan
-    Route::post('/dashboard/perawat/store', 
-    [PerawatController::class, 'store']
-    )->name('dashboard.perawat.store');
-
-    // Tabel Antrian (Read)
-    Route::get('/dashboard/perawat/antrianpemeriksaanawal', 
-    [PerawatController::class, 'antrian']
-    )->name('dashboard.perawat.antrianpemeriksaanawal');
+    Route::get('/dashboard/perawat/antrianpemeriksaanawal', [PerawatController::class, 'antrian'])
+        ->name('dashboard.perawat.antrianpemeriksaanawal');
 });
 
-
+/*
+|--------------------------------------------------------------------------
+| DOKTER
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:dokter'])->group(function () {
     Route::get('/dashboard/dokter', [App\Http\Controllers\DokterController::class, 'index'])->name('dashboard.dokter');
 
@@ -362,8 +386,58 @@ Route::middleware(['auth', 'role:dokter'])->group(function () {
     Route::post('/dashboard/dokter/rekam-medis/{id}', [DokterController::class, 'storeRecord'])->name('dashboard.dokter.record.store');
 });
 
+/*
+|--------------------------------------------------------------------------
+| APOTEKER 
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware(['auth', 'role:apoteker'])->group(function () {
+
     Route::get('/dashboard/apoteker', function () {
         return view('dashboard.apoteker.index');
     })->name('dashboard.apoteker');
+
+    Route::get('/dashboard/apoteker/resep', [ObatController::class, 'resepMasuk'])
+        ->name('dashboard.apoteker.resep');
+
+    Route::get('/resep/proses/{id}', [ObatController::class, 'prosesResep'])
+        ->name('resep.proses');
+
+    // ===== STOK OBAT (CRUD) =====
+    Route::get('/dashboard/apoteker/stok-obat', [ObatController::class, 'index'])
+        ->name('dashboard.apoteker.stok.obat');
+
+    Route::post('/dashboard/apoteker/stok-obat', [ObatController::class, 'store'])
+        ->name('dashboard.apoteker.stok.store');
+
+    Route::put('/dashboard/apoteker/stok-obat/{obat}', [ObatController::class, 'update'])
+        ->name('dashboard.apoteker.stok.update');
+
+    Route::delete('/dashboard/apoteker/stok-obat/{obat}', [ObatController::class, 'destroy'])
+        ->name('dashboard.apoteker.stok.destroy');
+
+    Route::get('/dashboard/apoteker/riwayat', [RiwayatObatController::class, 'index'])
+        ->name('dashboard.apoteker.riwayat');
+
+
+
+    Route::middleware(['auth', 'role:apoteker'])->group(function () {
+        Route::get(
+            '/dashboard/apoteker/riwayat',
+            [RiwayatObatController::class, 'index']
+        )->name('dashboard.apoteker.riwayat');
+    });
+
+    Route::post('/resep/bayar/{id}', [ObatController::class, 'bayar'])
+        ->name('resep.bayar');
+
+    Route::post('/resep/payment-success/{id}', [ObatController::class, 'paymentSuccess'])
+        ->name('resep.payment.success');
+
+    Route::get('/invoice/{no}', [InvoiceController::class, 'show'])
+        ->name('invoice.show');
 });
+
+Route::post('/midtrans/notification', [ObatController::class, 'notificationHandler'])
+    ->name('midtrans.notification');

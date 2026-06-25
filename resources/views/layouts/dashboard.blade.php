@@ -95,14 +95,19 @@
 
                 {{-- ================= PENDAFTARAN ================= --}}
                 @if (auth()->user()->role === 'pendaftaran')
-                    <a href="{{ route('dashboard.pendaftaran.patient') }}"
+                    <a href="{{ route('dashboard.pendaftaran.ManajemenPasien.index') }}"
                         class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-home"></i> Dashboard
+                        <i class="mr-3 fas fa-user-plus"></i> Manajemen pasien
                     </a>
 
                     <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
                         class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-user-plus"></i> Reservasi
+                        <i class="mr-3 fas fa-calendar-plus"></i> Reservasi
+                    </a>
+
+                    <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
+                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+                        <i class="mr-3 fas fa-stethoscope"></i> Status Kunjungan
                     </a>
                 @endif
 
@@ -140,23 +145,27 @@
 
                 {{-- ================= APOTEKER ================= --}}
                 @if (auth()->user()->role === 'apoteker')
-                    <a href="{{ route('dashboard.apoteker') }}"
-                        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-home"></i> Dashboard
-                    </a>
+    <a href="{{ route('dashboard.apoteker') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-home"></i> Dashboard
+    </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-prescription"></i> Daftar Resep
-                    </a>
+    <a href="{{ route('dashboard.apoteker.resep') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-prescription"></i> Daftar Resep
+    </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-pills"></i> Stok Obat
-                    </a>
+    <a href="{{ route('dashboard.apoteker.stok.obat') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-pills"></i> Stok Obat
+    </a>
 
-                    <a href="#" class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
-                        <i class="mr-3 fas fa-clock-rotate-left"></i> Riwayat Obat
-                    </a>
-                @endif
+    <a href="{{ route('dashboard.apoteker.riwayat') }}"
+        class="flex items-center px-4 py-3 rounded-lg hover:bg-white/20">
+        <i class="mr-3 fas fa-clock-rotate-left"></i> Riwayat Obat
+    </a>
+@endif
+
 
             </nav>
         </aside>
@@ -222,6 +231,27 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- GLOBAL SESSION NOTIFICATION --}}
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                icon: 'success'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                icon: 'error'
+            });
+        </script>
+    @endif
+
     @stack('scripts')
 
 </body>

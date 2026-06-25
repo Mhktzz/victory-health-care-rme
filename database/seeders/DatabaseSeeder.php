@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Patient;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Database\Seeders\ObatSeeder;
 
 class DatabaseSeeder extends Seeder
 {

@@ -10,16 +10,21 @@ return new class extends Migration {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
 
-            // Gabungan nama pasien + NIK
-            $table->string('pasien_identitas');
+            // pasien
+            $table->foreignId('patient_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-            // Detail reservasi
+            // dokter (ambil dari users)
+            $table->foreignId('doctor_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->string('jenis_layanan');
-            $table->string('dokter');
+
             $table->date('tanggal');
             $table->time('jam');
 
-            // Keluhan pasien
             $table->text('keluhan')->nullable();
 
             $table->string('status')->default('menunggu');

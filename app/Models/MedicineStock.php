@@ -12,8 +12,11 @@ class MedicineStock extends Model
     protected $fillable = [
         'medicine_id',
         'stok',
+        'stok_minimum',
         'tanggal_kadaluarsa'
     ];
+
+    protected $dates = ['tanggal_kadaluarsa'];
 
     public function medicine()
     {

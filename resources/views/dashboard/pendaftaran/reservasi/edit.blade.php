@@ -5,148 +5,163 @@
 
 @section('content')
 
-<div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto">
 
-    {{-- HEADER --}}
-    <div class="bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-center border border-gray-200">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-800">
-                Edit Reservasi Pasien
-            </h2>
-            <p class="text-sm text-gray-500">
-                Perbarui data reservasi
-            </p>
+        {{-- HEADER --}}
+        <div class="flex items-center justify-between p-6 mb-6 bg-white border shadow rounded-xl">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Edit Reservasi Pasien
+                </h2>
+                <p class="text-sm text-gray-500">
+                    Perbarui data reservasi
+                </p>
+            </div>
+
+            <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}" class="px-4 py-2 text-gray-700 border rounded">
+                ← Kembali
+            </a>
         </div>
 
-        <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
-           class="px-4 py-2 border-2 border-gray-400 text-gray-700 rounded hover:bg-gray-100">
-            ← Kembali
-        </a>
-    </div>
+        {{-- FORM --}}
+        <div class="p-6 bg-white border shadow rounded-xl">
 
-    {{-- FORM --}}
-    <div class="bg-white rounded-xl shadow p-6 border border-gray-200">
+            <form method="POST" action="{{ route('dashboard.pendaftaran.reservasi.update', $reservasi->id) }}"
+                class="space-y-5">
 
-        <form method="POST"
-              action="{{ route('dashboard.pendaftaran.reservasi.update', $reservasi->id) }}"
-              class="space-y-5">
+                @csrf
+                @method('PUT')
 
-            @csrf
-            @method('PUT')
-
-            {{-- PASIEN --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Identitas Pasien
-                </label>
-                <input type="text"
-                       name="pasien_identitas"
-                       value="{{ old('pasien_identitas', $reservasi->pasien_identitas) }}"
-                       class="w-full rounded-lg border-2 border-gray-300
-                              focus:border-blue-600 focus:ring-2 focus:ring-blue-200">
-            </div>
-
-            {{-- JENIS LAYANAN --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Jenis Layanan
-                </label>
-                <input type="text"
-                       name="jenis_layanan"
-                       value="{{ old('jenis_layanan', $reservasi->jenis_layanan) }}"
-                       class="w-full rounded-lg border-2 border-gray-300
-                              focus:border-blue-600 focus:ring-2 focus:ring-blue-200">
-            </div>
-
-            {{-- DOKTER --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Dokter
-                </label>
-                <input type="text"
-                       name="dokter"
-                       value="{{ old('dokter', $reservasi->dokter) }}"
-                       class="w-full rounded-lg border-2 border-gray-300
-                              focus:border-blue-600 focus:ring-2 focus:ring-blue-200">
-            </div>
-
-            {{-- TANGGAL & JAM --}}
-            <div class="grid grid-cols-2 gap-4">
+                {{-- PASIEN --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Tanggal
-                    </label>
-                    <input type="date"
-                           name="tanggal"
-                           value="{{ old('tanggal', $reservasi->tanggal) }}"
-                           class="w-full rounded-lg border-2 border-gray-300
-                                  focus:border-blue-600 focus:ring-2 focus:ring-blue-200">
+                    <label class="block mb-1 text-sm font-medium">Nama Pasien</label>
+
+                    <select name="patient_id" class="w-full border rounded-lg" required>
+
+                        @foreach ($patients as $patient)
+                            <option value="{{ $patient->id }}"
+                                {{ old('patient_id', $reservasi->patient_id) == $patient->id ? 'selected' : '' }}>
+                                {{ $patient->nama }} - {{ $patient->no_rm }}
+                            </option>
+                        @endforeach
+
+                    </select>
                 </div>
 
+                {{-- LAYANAN --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Jam
+                    <label class="block mb-1 text-sm font-medium">
+                        Jenis Layanan
                     </label>
-                    <input type="time"
-                           name="jam"
-                           value="{{ old('jam', $reservasi->jam) }}"
-                           class="w-full rounded-lg border-2 border-gray-300
-                                  focus:border-blue-600 focus:ring-2 focus:ring-blue-200">
+
+                    <select name="jenis_layanan" class="w-full border rounded-lg" required>
+
+                        @foreach ($layanans as $layanan)
+                            <option value="{{ $layanan->nama_layanan }}"
+                                {{ old('jenis_layanan', $reservasi->jenis_layanan) == $layanan->nama_layanan ? 'selected' : '' }}>
+                                {{ $layanan->kategori }} - {{ $layanan->nama_layanan }}
+                            </option>
+                        @endforeach
+
+                    </select>
                 </div>
-            </div>
 
-            {{-- STATUS --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Status Reservasi
-                </label>
-                <select name="status"
-                        class="w-full rounded-lg border-2 border-gray-300
-                               focus:border-blue-600 focus:ring-2 focus:ring-blue-200">
-                    <option value="menunggu" {{ $reservasi->status == 'menunggu' ? 'selected' : '' }}>
-                        Menunggu
-                    </option>
-                    <option value="diproses" {{ $reservasi->status == 'diproses' ? 'selected' : '' }}>
-                        Diproses
-                    </option>
-                    <option value="selesai" {{ $reservasi->status == 'selesai' ? 'selected' : '' }}>
-                        Selesai
-                    </option>
-                    <option value="dibatalkan" {{ $reservasi->status == 'dibatalkan' ? 'selected' : '' }}>
-                        Dibatalkan
-                    </option>
-                </select>
-            </div>
+                {{-- DOKTER --}}
+                <div>
+                    <label class="block mb-1 text-sm font-medium">Dokter</label>
 
-            {{-- KELUHAN --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Keluhan
-                </label>
-                <textarea name="keluhan"
-                          rows="3"
-                          class="w-full rounded-lg border-2 border-gray-300
-                                 focus:border-blue-600 focus:ring-2 focus:ring-blue-200">{{ old('keluhan', $reservasi->keluhan) }}</textarea>
-            </div>
+                    <select name="doctor_id" class="w-full border rounded-lg" required>
 
-            {{-- BUTTON --}}
-            <div class="flex gap-3 pt-4">
-                <button type="submit"
-                        class="px-6 py-2 rounded-lg bg-green-700 text-white
-                               border-2 border-green-800 hover:bg-green-800">
-                    💾 Update
-                </button>
+                        @foreach ($dokters as $dokter)
+                            <option value="{{ $dokter->id }}"
+                                {{ old('doctor_id', $reservasi->doctor_id) == $dokter->id ? 'selected' : '' }}>
+                                {{ $dokter->name }}
+                                @if ($dokter->spesialisasi)
+                                    - {{ $dokter->spesialisasi }}
+                                @endif
+                            </option>
+                        @endforeach
 
-                <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
-                   class="px-6 py-2 rounded-lg bg-gray-300 text-gray-700
-                          border-2 border-gray-400 hover:bg-gray-400">
-                    Batal
-                </a>
-            </div>
+                    </select>
+                </div>
 
-        </form>
+                {{-- TANGGAL JAM --}}
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div>
+                        <label class="block mb-1 text-sm font-medium">Tanggal</label>
+
+                        <input type="date" name="tanggal" value="{{ old('tanggal', $reservasi->tanggal) }}"
+                            class="w-full border rounded-lg">
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-sm font-medium">Jam</label>
+
+                        <input type="time" name="jam" value="{{ old('jam', $reservasi->jam) }}"
+                            class="w-full border rounded-lg">
+                    </div>
+
+                </div>
+
+                {{-- STATUS --}}
+                <div>
+                    <label class="block mb-1 text-sm font-medium">
+                        Status Reservasi
+                    </label>
+
+                    <select name="status" class="w-full border rounded-lg">
+
+                        <option value="menunggu" {{ $reservasi->status == 'menunggu' ? 'selected' : '' }}>
+                            Menunggu
+                        </option>
+
+                        <option value="diproses" {{ $reservasi->status == 'diproses' ? 'selected' : '' }}>
+                            Diproses
+                        </option>
+
+                        <option value="menunggu_dokter" {{ $reservasi->status == 'menunggu_dokter' ? 'selected' : '' }}>
+                            Menunggu Dokter
+                        </option>
+
+                        <option value="selesai" {{ $reservasi->status == 'selesai' ? 'selected' : '' }}>
+                            Selesai
+                        </option>
+
+                        <option value="dibatalkan" {{ $reservasi->status == 'dibatalkan' ? 'selected' : '' }}>
+                            Dibatalkan
+                        </option>
+
+                    </select>
+                </div>
+
+                {{-- KELUHAN --}}
+                <div>
+                    <label class="block mb-1 text-sm font-medium">
+                        Keluhan
+                    </label>
+
+                    <textarea name="keluhan" rows="3" class="w-full border rounded-lg">{{ old('keluhan', $reservasi->keluhan) }}</textarea>
+                </div>
+
+                {{-- BUTTON --}}
+                <div class="flex gap-3 pt-4">
+
+                    <button type="submit" class="px-6 py-2 text-white bg-green-700 rounded-lg">
+                        💾 Update
+                    </button>
+
+                    <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
+                        class="px-6 py-2 text-gray-700 bg-gray-300 rounded-lg">
+                        Batal
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
-</div>
 
 @endsection

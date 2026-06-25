@@ -21,6 +21,11 @@ class Medicine extends Model
         return $this->hasMany(MedicineStock::class);
     }
 
+    public function stock()
+    {
+        return $this->hasOne(MedicineStock::class)->latestOfMany();
+    }
+
     public function prescriptionItems()
     {
         return $this->hasMany(PrescriptionItem::class);

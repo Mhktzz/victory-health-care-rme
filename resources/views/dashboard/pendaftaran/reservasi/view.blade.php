@@ -32,7 +32,7 @@
             <div>
                 <p class="text-gray-500">Pasien</p>
                 <p class="font-semibold text-gray-800">
-                    {{ $reservasi->pasien_identitas }}
+                    {{ $reservasi->patient->nama ?? '-' }}
                 </p>
             </div>
 
@@ -46,7 +46,7 @@
             <div>
                 <p class="text-gray-500">Dokter</p>
                 <p class="font-semibold text-gray-800">
-                    {{ $reservasi->dokter }}
+                    {{ $reservasi->doctor->name ?? '-' }}
                 </p>
             </div>
 

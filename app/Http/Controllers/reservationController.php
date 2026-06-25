@@ -3,57 +3,56 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Patient;
+use App\Models\Layanan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    // =====================
-    // INDEX
-    // =====================
     public function index()
     {
-        $reservations = Reservation::latest()->get();
+        $reservations = Reservation::with(['patient', 'doctor'])->latest()->get();
         return view('dashboard.pendaftaran.reservasi.index', compact('reservations'));
     }
+
     public function create()
-{
-    return view('dashboard.pendaftaran.reservasi.create');
-}
+    {
+        $patients = Patient::all();
+        $layanans = Layanan::orderBy('kategori')->orderBy('nama_layanan')->get();
 
-// =====================
-// SHOW (VIEW DETAIL)
-// =====================
-public function show(Reservation $reservasi)
-{
-    return view(
-        'dashboard.pendaftaran.reservasi.view',
-        compact('reservasi')
-    );
-}
+        // ambil user dengan role dokter
+        $dokters = User::where('role', 'dokter')->get();
 
+        return view(
+            'dashboard.pendaftaran.reservasi.create',
+            compact('patients', 'layanans', 'dokters')
+        );
+    }
+    public function show(Reservation $reservasi)
+    {
+        return view('dashboard.pendaftaran.reservasi.view', compact('reservasi'));
+    }
 
-    // =====================
-    // STORE
-    // =====================
     public function store(Request $request)
     {
         $request->validate([
-            'pasien_identitas' => 'required',
-            'jenis_layanan' => 'required',
-            'dokter' => 'required',
-            'tanggal' => 'required|date',
-            'jam' => 'required',
-            'keluhan' => 'nullable',
+            'patient_id'     => 'required|exists:patients,id',
+            'doctor_id'      => 'required|exists:users,id',
+            'jenis_layanan'  => 'required|string',
+            'tanggal'        => 'required|date',
+            'jam'            => 'required',
+            'keluhan'        => 'nullable|string',
         ]);
 
         Reservation::create([
-            'pasien_identitas' => $request->pasien_identitas,
-            'jenis_layanan' => $request->jenis_layanan,
-            'dokter' => $request->dokter,
-            'tanggal' => $request->tanggal,
-            'jam' => $request->jam,
-            'keluhan' => $request->keluhan,
-            'status' => 'menunggu',
+            'patient_id'     => $request->patient_id,
+            'doctor_id'      => $request->doctor_id,
+            'jenis_layanan'  => $request->jenis_layanan,
+            'tanggal'        => $request->tanggal,
+            'jam'            => $request->jam,
+            'keluhan'        => $request->keluhan,
+            'status'         => 'menunggu',
         ]);
 
         return redirect()
@@ -61,33 +60,44 @@ public function show(Reservation $reservasi)
             ->with('success', 'Reservasi berhasil ditambahkan');
     }
 
-    // =====================
-    // EDIT
-    // =====================
     public function edit(Reservation $reservasi)
     {
-        return view('dashboard.pendaftaran.reservasi.edit', compact('reservasi'));
+        $patients = Patient::all();
+        $layanans = Layanan::orderBy('kategori')->orderBy('nama_layanan')->get();
+        $dokters = User::where('role', 'dokter')->get();
+
+        return view(
+            'dashboard.pendaftaran.reservasi.edit',
+            compact('reservasi', 'patients', 'layanans', 'dokters')
+        );
     }
 
-    // =====================
-    // UPDATE
-    // =====================
     public function update(Request $request, Reservation $reservasi)
     {
         $request->validate([
-            'status' => 'required',
+            'patient_id'     => 'required|exists:patients,id',
+            'doctor_id'      => 'required|exists:users,id',
+            'jenis_layanan'  => 'required',
+            'tanggal'        => 'required|date',
+            'jam'            => 'required',
+            'status'         => 'required',
+            'keluhan'        => 'nullable',
         ]);
 
-        $reservasi->update($request->all());
+        $reservasi->update([
+            'patient_id'     => $request->patient_id,
+            'doctor_id'      => $request->doctor_id,
+            'jenis_layanan'  => $request->jenis_layanan,
+            'tanggal'        => $request->tanggal,
+            'jam'            => $request->jam,
+            'status'         => $request->status,
+            'keluhan'        => $request->keluhan,
+        ]);
 
         return redirect()
             ->route('dashboard.pendaftaran.reservasi.index')
             ->with('success', 'Reservasi diperbarui');
     }
-
-    // =====================
-    // DELETE
-    // =====================
     public function destroy(Reservation $reservasi)
     {
         $reservasi->delete();

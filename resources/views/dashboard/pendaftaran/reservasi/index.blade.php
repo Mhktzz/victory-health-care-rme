@@ -5,117 +5,176 @@
 
 @section('content')
 
-{{-- HEADER --}}
-<div class="bg-white rounded-xl shadow p-6 mb-6 flex justify-between items-center">
-    <div>
-        <h2 class="text-xl font-semibold">Reservasi & Penjadwalan</h2>
-        <p class="text-sm text-gray-500">Kelola reservasi pasien</p>
-    </div>
+    <div class="mx-auto max-w-7xl">
 
-    <a href="{{ route('dashboard.pendaftaran.reservasi.create') }}"
-       class="px-4 py-2 bg-blue-600 text-white rounded-lg">
-        + Buat Reservasi
-    </a>
-</div>
+        {{-- HEADER --}}
+        <div
+            class="flex flex-col gap-4 p-6 mb-6 bg-white border border-gray-200 shadow rounded-2xl md:flex-row md:items-center md:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Reservasi & Penjadwalan
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Kelola data reservasi pasien dan jadwal pemeriksaan
+                </p>
+            </div>
 
-{{-- TABLE --}}
-@if ($reservations->count())
-<div class="bg-white rounded-xl shadow overflow-hidden">
-    <table class="w-full text-sm">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="px-4 py-3 text-left">Pasien</th>
-                <th class="px-4 py-3">Layanan</th>
-                <th class="px-4 py-3">Dokter</th>
-                <th class="px-4 py-3">Tanggal</th>
-                <th class="px-4 py-3">Jam</th>
-                <th class="px-4 py-3">Status</th>
-                <th class="px-4 py-3 text-center">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($reservations as $r)
-            <tr class="border-t">
-                <td class="px-4 py-3">{{ $r->pasien_identitas }}</td>
-                <td class="px-4 py-3">{{ $r->jenis_layanan }}</td>
-                <td class="px-4 py-3">{{ $r->dokter }}</td>
-                <td class="px-4 py-3">
-                    {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
-                </td>
-                <td class="px-4 py-3">{{ $r->jam }}</td>
-                <td class="px-4 py-3">
-                    <span class="px-3 py-1 text-xs rounded-full
-                        {{ $r->status === 'selesai' ? 'bg-green-100 text-green-700' :
-                           ($r->status === 'menunggu' ? 'bg-yellow-100 text-yellow-700' :
-                           'bg-red-100 text-red-700') }}">
-                        {{ ucfirst($r->status) }}
-                    </span>
-                </td>
+            <a href="{{ route('dashboard.pendaftaran.reservasi.create') }}"
+                class="px-5 py-3 font-medium text-white transition bg-blue-600 rounded-xl hover:bg-blue-700">
+                + Buat Reservasi
+            </a>
+        </div>
 
-                {{-- AKSI ICON --}}
-                <td class="px-4 py-3">
-                    <div class="flex justify-center gap-2">
+        {{-- FILTER --}}
+        <div class="p-6 mb-6 bg-white border border-gray-200 shadow rounded-2xl">
+            <form method="GET" class="flex flex-col gap-4 md:flex-row md:items-end">
 
-                        {{-- VIEW --}}
-                        <a href="{{ route('dashboard.pendaftaran.reservasi.view', $r->id) }}"
-                           title="View"
-                           class="w-9 h-9 flex items-center justify-center bg-emerald-700 text-white rounded hover:bg-emerald-800">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                 viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M2.458 12C3.732 7.943 7.523 5 12 5
-                                      c4.478 0 8.268 2.943 9.542 7
-                                      -1.274 4.057-5.064 7-9.542 7
-                                      -4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                        </a>
+                <div class="w-full md:w-72">
+                    <label class="block mb-2 text-sm font-medium text-gray-700">
+                        Filter Tanggal
+                    </label>
 
-{{-- EDIT --}}
-<a href="{{ route('dashboard.pendaftaran.reservasi.edit', $r->id) }}"
-   title="Edit"
-   class="w-9 h-9 flex items-center justify-center bg-orange-500 text-white rounded hover:bg-orange-600">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-         viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15.232 5.232l3.536 3.536M9 11l6.232-6.232
-              a2.5 2.5 0 013.536 3.536L12.536 14.536
-              a2.5 2.5 0 01-1.768.732H8v-2.768
-              a2.5 2.5 0 01.732-1.768z" />
-    </svg>
-</a>
+                    <input type="date" name="tanggal" value="{{ request('tanggal') ?? now()->format('Y-m-d') }}"
+                        class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-200 focus:border-blue-600">
+                </div>
 
+                <div class="flex gap-3">
+                    <button type="submit" class="px-5 py-2 text-white bg-gray-800 rounded-xl hover:bg-gray-900">
+                        Terapkan
+                    </button>
 
-                        {{-- DELETE --}}
-                        <form method="POST"
-                              action="{{ route('dashboard.pendaftaran.reservasi.destroy', $r->id) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button title="Delete"
-                                    onclick="return confirm('Hapus reservasi ini?')"
-                                    class="w-9 h-9 flex items-center justify-center bg-pink-500 text-white rounded hover:bg-pink-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                     viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862
-                                          a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6
-                                          M9 7h6m2 0H7m3-3h4" />
-                                </svg>
-                            </button>
-                        </form>
+                    <a href="{{ route('dashboard.pendaftaran.reservasi.index') }}"
+                        class="px-5 py-2 text-gray-700 bg-gray-200 rounded-xl hover:bg-gray-300">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+        {{-- LIST DATA --}}
+        @if ($reservations->count())
+
+            <div class="space-y-5">
+
+                @foreach ($reservations as $r)
+                    <div class="p-6 transition bg-white border border-gray-200 shadow rounded-2xl hover:shadow-md">
+
+                        <div class="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+
+                            {{-- LEFT --}}
+                            <div class="flex-1">
+
+                                {{-- NAMA + STATUS --}}
+                                <div class="flex flex-wrap items-center gap-3 mb-3">
+
+                                    <h3 class="text-lg font-semibold text-gray-800">
+                                        {{ $r->patient->nama ?? '-' }}
+                                    </h3>
+
+                                    <span class="text-sm text-gray-500">
+                                        RM: {{ $r->patient->no_rm ?? '-' }}
+                                    </span>
+
+                                    {{-- STATUS --}}
+                                    <span
+                                        class="px-3 py-1 text-xs font-semibold rounded-full
+                                    {{ $r->status == 'menunggu' ? 'bg-yellow-100 text-yellow-700' : '' }}
+                                    {{ $r->status == 'diproses' ? 'bg-blue-100 text-blue-700' : '' }}
+                                    {{ $r->status == 'selesai' ? 'bg-green-100 text-green-700' : '' }}
+                                    {{ $r->status == 'dibatalkan' ? 'bg-red-100 text-red-700' : '' }}">
+                                        {{ ucfirst($r->status) }}
+                                    </span>
+
+                                </div>
+
+                                {{-- DETAIL --}}
+                                <div class="grid grid-cols-1 gap-3 text-sm text-gray-600 md:grid-cols-2 xl:grid-cols-4">
+
+                                    <div>
+                                        <span class="font-medium text-gray-800">Tanggal:</span><br>
+                                        {{ \Carbon\Carbon::parse($r->tanggal)->format('d M Y') }}
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800">Jam:</span><br>
+                                        {{ $r->jam }}
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800">Dokter:</span><br>
+                                        {{ $r->doctor->name ?? '-' }}
+                                    </div>
+
+                                    <div>
+                                        <span class="font-medium text-gray-800">Layanan:</span><br>
+                                        {{ $r->jenis_layanan }}
+                                    </div>
+
+                                </div>
+
+                                {{-- KELUHAN --}}
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-500">
+                                        <span class="font-medium text-gray-700">Keluhan:</span>
+                                        {{ $r->keluhan ?: '-' }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            {{-- RIGHT --}}
+                            <div class="flex flex-wrap gap-3">
+
+                                {{-- VIEW --}}
+                                <a href="{{ route('dashboard.pendaftaran.reservasi.view', $r->id) }}"
+                                    class="px-4 py-2 text-sm text-white bg-blue-600 rounded-xl hover:bg-blue-700">
+                                    View
+                                </a>
+
+                                {{-- EDIT --}}
+                                <a href="{{ route('dashboard.pendaftaran.reservasi.edit', $r->id) }}"
+                                    class="px-4 py-2 text-sm text-white bg-orange-500 rounded-xl hover:bg-orange-600">
+                                    Edit
+                                </a>
+
+                                {{-- DELETE --}}
+                                <form method="POST"
+                                    action="{{ route('dashboard.pendaftaran.reservasi.destroy', $r->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" onclick="return confirm('Batalkan reservasi ini?')"
+                                        class="px-4 py-2 text-sm text-red-600 bg-red-100 rounded-xl hover:bg-red-200">
+                                        Batalkan
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </div>
 
                     </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-@else
-<div class="bg-white rounded-xl shadow p-10 text-center">
-    Tidak ada reservasi
-</div>
-@endif
+                @endforeach
+
+            </div>
+        @else
+            <div class="p-12 text-center bg-white border border-gray-200 shadow rounded-2xl">
+                <h3 class="mb-2 text-lg font-semibold text-gray-700">
+                    Tidak Ada Reservasi
+                </h3>
+                <p class="mb-5 text-sm text-gray-500">
+                    Belum ada data reservasi pada tanggal ini.
+                </p>
+
+                <a href="{{ route('dashboard.pendaftaran.reservasi.create') }}"
+                    class="px-5 py-3 text-white bg-blue-600 rounded-xl hover:bg-blue-700">
+                    + Buat Reservasi
+                </a>
+            </div>
+
+        @endif
+
+    </div>
 
 @endsection

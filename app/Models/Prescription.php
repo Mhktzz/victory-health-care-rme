@@ -11,9 +11,11 @@ class Prescription extends Model
 
     protected $fillable = [
         'medical_record_id',
-        'dokter_id'
+        'dokter_id',
+        'status',
+        'snap_token',
+        'payment_status'
     ];
-
     public function medicalRecord()
     {
         return $this->belongsTo(MedicalRecord::class);

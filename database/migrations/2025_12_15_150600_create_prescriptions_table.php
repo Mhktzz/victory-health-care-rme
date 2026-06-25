@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up(): void
     {
         Schema::create('prescriptions', function (Blueprint $table) {
@@ -18,6 +19,9 @@ return new class extends Migration
             $table->foreignId('dokter_id')
                 ->constrained('users')
                 ->cascadeOnDelete();
+
+            // ✅ TAMBAHKAN INI
+            $table->string('status')->default('belum');
 
             $table->timestamps();
         });
